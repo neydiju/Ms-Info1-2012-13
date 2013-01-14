@@ -60,13 +60,13 @@ public class DateProbabilityCalculator {
 		
 			//Pruefen ob der 13. an einem anderen Tag als Freitag oefter vorkam
 			//(koennte man auch in eine if-Abfrage packen, aber so ist uebrsichtlicher.)
-			if      (amountOf13s[0] > amountOf13s[4]) { itIs = false; }
-			else if (amountOf13s[1] > amountOf13s[4]) { itIs = false; }
-			else if (amountOf13s[2] > amountOf13s[4]) { itIs = false; }
-			else if (amountOf13s[3] > amountOf13s[4]) { itIs = false; }
-			else if (amountOf13s[5] > amountOf13s[4]) { itIs = false; }
-			else if (amountOf13s[6] > amountOf13s[4]) { itIs = false; }
-			else									  { itIs = true;  }
+			if      (amountOf13s[0] >= amountOf13s[4]) { itIs = false; }
+			else if (amountOf13s[1] >= amountOf13s[4]) { itIs = false; }
+			else if (amountOf13s[2] >= amountOf13s[4]) { itIs = false; }
+			else if (amountOf13s[3] >= amountOf13s[4]) { itIs = false; }
+			else if (amountOf13s[5] >= amountOf13s[4]) { itIs = false; }
+			else if (amountOf13s[6] >= amountOf13s[4]) { itIs = false; }
+			else									   { itIs = true;  }
 		
 		}//if %7
 	
@@ -163,8 +163,8 @@ public class DateProbabilityCalculator {
 	public void run() {
 		
 		System.out.println();
-		System.out.println("Der 13. fällt zwischen 1600 und 2000 öfter auf "
-				+"einen Freitag als auf andere Tage: das ist "+isMoreOftenFriday(1600, 2000, 5));
+		System.out.println("Der 13. fällt zwischen 1600 und 1900 öfter auf "
+				+"einen Freitag als auf andere Tage: das ist "+isMoreOftenFriday(1600, 1900, 5));
 		System.out.println();
 		System.out.println("Der 13. fällt zwischen 2013 und 2013 öfter auf "
 				+"einen Freitag als auf andere Tage: das ist "+isMoreOftenFriday(2013, 2013, 1));

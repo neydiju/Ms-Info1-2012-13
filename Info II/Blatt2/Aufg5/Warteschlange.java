@@ -1,3 +1,5 @@
+package G04C_A5;
+
 /**
  *  Uebungsgruppe G04-C
  *  Henner Niehaus, Jonas Stadler, Eva Poell
@@ -13,8 +15,8 @@
  	
  	//Attribute
  	//---------
- 	private Stapel stapelEnqueue;	//Letztes Element der Warteschlange/tail ist oben 
- 	private Stapel stapelDequeue;	//Erstes  Element der Warteschlange/head ist oben
+ 	private Stapel<T> stapelEnqueue;	//Letztes Element der Warteschlange/tail ist oben 
+ 	private Stapel<T> stapelDequeue;	//Erstes  Element der Warteschlange/head ist oben
  							//									-> umgekehrte Reihenfolge
  	//es gibt intern kein richtiges Warteschlangen-Objekt,
  	  // sondern es wird durch die 2 Stapel realisiert
@@ -29,9 +31,9 @@
      */
     public Warteschlange() {
 		//Erzeuge einen leeren Stapel in der Reihenfolge des Anfügens   der Elemente
-		stapelEnqueue = new Stapel();
+		stapelEnqueue = new Stapel<T>();
 		//Erzeuge einen leeren Stapel in der Reihenfolge des Entfernens der Elemente
-		stapelDequeue = new Stapel();
+		stapelDequeue = new Stapel<T>();
     }
     
     /**
@@ -43,10 +45,15 @@
      *  @param queue Die Warteschlange die kopiert werden soll
      */
     public Warteschlange(Warteschlange queue) {
-    	//Erzeuge einen Stapel in der Reihenfolge des Anfügens   der Elemente aus der Uebergabe
-		stapelEnqueue = queue.getStapelEnqueue();
-		//Erzeuge einen Stapel in der Reihenfolge des Entfernens der Elemente aus der Uebergabe
-		stapelDequeue = queue.getStapelDequeue();
+    	try {
+			//Erzeuge einen Stapel in der Reihenfolge des Anfügens   der Elemente aus der Uebergabe
+			stapelEnqueue = queue.getStapelEnqueue();
+			//Erzeuge einen Stapel in der Reihenfolge des Entfernens der Elemente aus der Uebergabe
+			stapelDequeue = queue.getStapelDequeue();
+		}
+		catch (Exception e) {
+			System.out.println("Ein Fehler ist aufgetreten");
+		}
     }
  	
  	
@@ -58,15 +65,27 @@
  	  // die Attribute zugegriffen wird. Denn auch die Signatur sieht solches nicht vor.
  	/**
  	 *  Uebergibt den Stapel mit dem letzten Element der Warteschlange/tail oben
+ 	 *
+     *  @throws IllegalStateException falls die Warteschlange leer ist.
  	 */
- 	public Stapel getStapelEnqueue() {
- 		return stapelEnqueue;
+ 	public Stapel getStapelEnqueue() throws IllegalStateException {
+ 		if (stapelEnqueue.isEmpty()) {	//es reicht, einen der beiden Stapel zu pruefen,
+    									 // denn sie werden immer gleichzeitig veraendert.
+    		throw new IllegalStateException("Warteschlange ist leer.");
+    	}
+    	else return stapelEnqueue;
  	} 	
  	/**
  	 *  Uebergibt den Stapel mit dem ersten Element der Warteschlange/head oben
+ 	 *
+     *  @throws IllegalStateException falls die Warteschlange leer ist.
  	 */
- 	public Stapel getStapelDequeue() {
- 		return stapelDequeue;
+ 	public Stapel getStapelDequeue() throws IllegalStateException {
+ 		if (stapelEnqueue.isEmpty()) {	//es reicht, einen der beiden Stapel zu pruefen,
+    									 // denn sie werden immer gleichzeitig veraendert.
+    		throw new IllegalStateException("Warteschlange ist leer.");
+    	}
+    	else return stapelDequeue;
  	}
  	
  	
@@ -147,7 +166,7 @@
     	}
     	else {
     		//Zwischenspeicher als leeren Stapel erzeugen
-    		Stapel memory = new Stapel();
+    		Stapel<T> memory = new Stapel<T>();
     		T      element;
     	
     		//eigentliches Umdrehen

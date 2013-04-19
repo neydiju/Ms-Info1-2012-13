@@ -132,58 +132,74 @@
     
     //Hilfsmethoden:
     /**
-     *  Erzeugt aus dem uebergebenen Stapel den umgekehrten Stapel
+     *  Erzeugt aus dem angegebenen Stapel den anderen in umgekehrter Reihenfolge
      *
      *  @param way In welche Richtung umgedreht werden soll: 
      *             <code>true</code>,  wenn von stapelEnqueue aus stapelDequeue gebildet wird, 
      *             <code>false</code>, wenn von stapelDequeue aus stapelEnqueue gebildet wird
      *  @throws IllegalStateException falls die Warteschlange leer ist. 
      */
-    protected Stapel reverseStapel(boolean way) throws IllegalStateException {
+    protected void reverseStapel(boolean way) throws IllegalStateException {
     	//Fehler abfangen, falls die Schlange leer ist.
     	if (stapelEnqueue.isEmpty()) {	//es reicht, einen der beiden Stapel zu pruefen,
     									 // denn sie werden immer gleichzeitig veraendert.
     		throw new IllegalStateException("Warteschlange ist leer.");
     	}
     	else {
+    		//Zwischenspeicher als leeren Stapel erzeugen
+    		Stapel memory = new Stapel();
+    		T      element;
+    	
     		//eigentliches Umdrehen
-    		if (way) {	//von stapelEnqueue aus stapelDequeue bilden
-    			stapelDequeue = reverseInternal(stapelEnqueue);
-    		}
-    		else {		//von stapelDequeue aus stapelEnqueue bilden
-    			stapelEnqueue = reverseInternal(stapelDequeue);
+    		//(muss einmal hin und einmal her gedreht werden, weil man Stapel selbst nicht kopieren kann)
+    		
+    		if (way) {	//von stapelEnqueue aus: stapelDequeue bilden
+    			//stapelEnqueue umschichten
+				while (!stapelEnqueue.isEmpty()) {	//solange der Stapel noch nicht leer ist
+					
+					element = stapelEnqueue.top();	//oberstes Element von Source waehlen
+					
+					stapelDequeue.push(element);	//dieses Element in Output kopieren
+					memory.push(element);			//dieses Element in den Zwischenspeicherstapel kopieren
+													//(kann man auch zusammenfassen, ist aber weniger uebersichtlich) 
+					stapelEnqueue.pop();			//oberstes Element von Source löschen
+				}//=> stapelDequeue fertig erzeugt
+				
+				//aus memory wieder stapelEnqueue erzeugen:
+				while (!memory.isEmpty()) {			//solange der Stapel noch nicht leer ist
+					
+					element = memory.top();			//oberstes Element von Source waehlen
+					
+					stapelEnqueue.push(element);	//dieses Element in Output kopieren
+													//(kann man auch zusammenfassen, ist aber weniger uebersichtlich) 
+					memory.pop();					//oberstes Element von Source löschen
+				}
     		}
     		
-    	}
-    }
-    
-    /**
-     *  Hilfsfunktion fuer die Funktion <code>reverseStapel</code>
-     *  Enthaelt die Schleifenstruktur davon. Und braucht sich dafuer nicht mit Exceptions befassen.
-     *
-     *  @param stapel Der Stapel von dem ausgehend der andere gebildet werden soll
-     *  @return Den umgekehrten Stapel
-     */
-    protected Stapel reverseInternal(Stapel stapel) { //list-of-numbers actual max step
-    	//Variablen:
-    	Stapel stapelSource;
-    	Stapel stapelOutput;
-    	T      element;
-    	
-    	//Uebergebenen Stapel zum Bearbeiten kopieren
-    	stapelSource = stapel.clone();
-    	
-    	//Ausgabe Stapel als leeren Stapel erzeugen
-    	stapelOutput = new Stapel();
-    	
-    	//Stapel umschichten
-    	while (!stapelSource.isEmpty()) {	//solange der Stapel noch nicht leer ist
-    		element = stapelSource.top();	//oberstes Element von Source waehlen
-    		stapelOutput.push(element);		//dieses Element in Output kopieren (kan man auch zusammenfassen, ist aber weniger uebersichtlich)
-    		stapelSource.pop();				//oberstes Element von Source löschen
-    	}
-    	
-    	return stapelOutput;
- 	}
+    		else {		//von stapelDequeue aus: stapelEnqueue bilden
+    			//stapelDequeue umschichten
+				while (!stapelDequeue.isEmpty()) {	//solange der Stapel noch nicht leer ist
+					
+					element = stapelDequeue.top();	//oberstes Element von Source waehlen
+					
+					stapelEnqueue.push(element);	//dieses Element in Output kopieren
+					memory.push(element);			//dieses Element in den Zwischenspeicherstapel kopieren
+													//(kann man auch zusammenfassen, ist aber weniger uebersichtlich) 
+					stapelDequeue.pop();			//oberstes Element von Source löschen
+				}//=> stapelEnqueue fertig erzeugt
+				
+				//aus memory wieder stapelDequeue erzeugen:
+				while (!memory.isEmpty()) {			//solange der Stapel noch nicht leer ist
+					
+					element = memory.top();			//oberstes Element von Source waehlen
+					
+					stapelDequeue.push(element);	//dieses Element in Output kopieren
+													//(kann man auch zusammenfassen, ist aber weniger uebersichtlich) 
+					memory.pop();					//oberstes Element von Source löschen
+				}
+    		}
+    		
+    	} //else Exception
+    } //reverseStapel()
  	
- }
+ } //class
